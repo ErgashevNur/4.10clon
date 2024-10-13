@@ -23960,3 +23960,32 @@ export const countries = [
     capitalInfo: { latlng: [18.22, -63.05] },
   },
 ];
+
+let tillar = {};
+let davlatlar = {};
+
+countries.forEach((country) => {
+  if (country.languages) {
+    for (let key in country.languages) {
+      let lang = country.languages[key];
+
+      tillar[lang] = (tillar[lang] || 0) + 1;
+
+      if (!davlatlar[lang]) {
+        davlatlar[lang] = [];
+      }
+      davlatlar[lang].push(country.name.common);
+    }
+  }
+});
+
+console.log(tillar, davlatlar);
+
+const barchaTillar = Object.entries(tillar).filter(
+  ([lang, count]) => count >= 5
+);
+
+barchaTillar.forEach(([lang, count]) => {
+  console.log(`\n${lang}: ${count} ta davlatda ishlatiladi`);
+  console.log(`Davlatlar: ${davlatlar[lang].join(", ")}`);
+});
