@@ -23961,31 +23961,29 @@ export const countries = [
   },
 ];
 
-let tillar = {};
-let davlatlar = {};
-
-countries.forEach((country) => {
-  if (country.languages) {
-    for (let key in country.languages) {
-      let lang = country.languages[key];
-
-      tillar[lang] = (tillar[lang] || 0) + 1;
-
-      if (!davlatlar[lang]) {
-        davlatlar[lang] = [];
-      }
-      davlatlar[lang].push(country.name.common);
+const allLanguage = [];
+const language = countries.reduce((acc, curVal) => {
+  const value = curVal.languages && Object.values(curVal.languages);
+  allLanguage.push(value);
+  return acc;
+}, {});
+const result = allLanguage
+  .flatMap((item) => item)
+  .reduce((acc, curVal) => {
+    if (acc[curVal]) {
+      acc[curVal] = acc[curVal] + 1;
+    } else {
+      acc[curVal] = 1;
     }
-  }
-});
 
-console.log(tillar, davlatlar);
-
-const barchaTillar = Object.entries(tillar).filter(
-  ([lang, count]) => count >= 5
+    return acc;
+  }, {});
+console.log(
+  Object.fromEntries(
+    Object.entries(result)
+      .sort((a, b) => {
+        return b[1] - a[1];
+      })
+      .slice(0, 5)
+  )
 );
-
-barchaTillar.forEach(([lang, count]) => {
-  console.log(`\n${lang}: ${count} ta davlatda ishlatiladi`);
-  console.log(`Davlatlar: ${davlatlar[lang].join(", ")}`);
-});
